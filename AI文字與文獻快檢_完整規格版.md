@@ -1,19 +1,14 @@
 # AI 文字與文獻快檢：完整規格版
 
-本檔保存正式 Skill 的完整文字規格，適合審查、轉換平台或交給 Skill Creator 建立原生 Skill。
+本檔由正式 Skill 資料夾自動產生，用於公開審查、跨平台移植、交給 Skill Creator 重建，或在無法傳送資料夾時作為單檔備份。
 
-> 日常直接上傳給 AI，請優先使用同資料夾的「Lite 直接上傳版」。本檔內容較長；原生 Skill 應使用本專案的 `skill/check-ai-writing-and-sources/` 資料夾，讓參考檔按需載入。
+一般使用者請優先使用 `AI文字與文獻快檢_Lite_直接上傳版.md`。本檔很長，不適合每次快速檢查都完整載入。
 
-若只能使用單一附件，可上傳本檔並輸入：
-
-```text
-請依附件規格執行「AI 文字與文獻快檢」。先選擇最小必要路由，不要一次套用所有模組；說明本次可用工具與限制後，再檢查我接下來提供的文件。
-```
-
+若交給 Skill Creator，請明確說明：本附件是多檔 Skill 規格，不是待摘要文章；應依每個「檔案」標題還原相對路徑。
 
 ---
 
-## 規格來源：`SKILL.md`
+## 檔案：`SKILL.md`
 
 ---
 name: check-ai-writing-and-sources
@@ -144,7 +139,29 @@ Use **高度疑似虛構或拼接** only when multiple independent checks reveal
 
 ---
 
-## 規格來源：`references/ai-writing-signals.md`
+## 檔案：`agents/openai.yaml`
+
+```yaml
+interface:
+  display_name: AI 文字與文獻快檢
+  short_description: 按需檢查寫作品質、來源證據、方法與 AI 研究流程
+  default_prompt: Use $check-ai-writing-and-sources to select only the needed writing,
+    source, evidence-method, or AI-process route, state available tools, and give
+    an author-facing review.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true
+```
+
+---
+
+## 檔案：`references/ai-writing-signals.md`
 
 # AI-like writing signals: educational review guide
 
@@ -273,7 +290,7 @@ Ask the author to state the independently chosen research problem, add a counter
 
 ---
 
-## 規格來源：`references/source-verification.md`
+## 檔案：`references/source-verification.md`
 
 # Source verification protocol
 
@@ -404,7 +421,72 @@ Do not treat generic titles, missing DOIs, paywalls, broken URLs, books, grey li
 
 ---
 
-## 規格來源：`references/data-quality-and-source-selection.md`
+## 檔案：`references/taiwan-chinese-sources.md`
+
+# Taiwan and Chinese source routing
+
+## Purpose
+
+Use these routes when global scholarly indexes do not confirm a Chinese or Taiwanese source. Do not claim direct database access when a site requires login, subscription, CAPTCHA, or manual interaction.
+
+## Taiwan academic sources
+
+| Source | Best for | URL | Student check |
+|---|---|---|---|
+| 國家圖書館期刊文獻資訊網 | Taiwan-published journals and journal articles | https://tpl.ncl.edu.tw/ | Search exact title, then author plus title words; inspect journal, year, volume, issue, and pages. |
+| 臺灣人文及社會科學引文索引資料庫（TCI-HSS） | Humanities and social-science journals, books, theses, and citation records | https://tci.ncl.edu.tw/ | Search source works and author records; compare title variants and publication type. |
+| 臺灣博碩士論文知識加值系統 | Theses awarded by Taiwan universities | https://ndltd.ncl.edu.tw/ | Search title, author, school, department, year, and adviser; inspect authorization separately from existence. |
+| 華藝線上圖書館 | Chinese journals, conference papers, and theses | https://www.airitilibrary.com/ | Search exact title and author; access may depend on institutional subscription. |
+| Institution repository or library discovery service | University reports, theses, faculty works, books, and licensed records | Use the author's institution | Search the title first, then author and year; distinguish a catalog record from full-text access. |
+
+## Books and government information
+
+| Source | Best for | URL |
+|---|---|---|
+| 國家圖書館館藏與主題資源 | Taiwan publications, catalogs, periodicals, theses, and special collections | https://www.ncl.edu.tw/collections |
+| 全國法規資料庫 | Taiwan laws and regulations | https://law.moj.gov.tw/ |
+| 政府資料開放平臺 | Taiwan government datasets and metadata | https://data.gov.tw/ |
+| Issuing ministry, agency, university, or research institute | Reports, statistics, policies, press releases | Search the official domain and report title |
+
+For books, also search the publisher, ISBN, edition, library catalog, and table of contents. A book may be real even when Crossref and Semantic Scholar return nothing.
+
+## Search variants
+
+Generate several copyable queries:
+
+- `"完整題名"`
+- `"完整題名" 作者`
+- `作者 題名中最具辨識力的 2–4 個詞`
+- `"完整題名" 期刊名`
+- `site:edu.tw "完整題名"`
+- `site:gov.tw "報告題名"`
+- Traditional Chinese, Simplified Chinese, punctuation-free, and known English-title variants
+
+Do not translate a title and treat the translation as official unless the source record supplies it.
+
+## When the AI cannot enter the database
+
+Provide:
+
+1. the database name and direct homepage;
+2. two or three exact queries;
+3. the fields to compare;
+4. a request for the author to paste the resulting record, stable URL, screenshot, abstract, or relevant passage;
+5. the current status `尚未核實`.
+
+Do not say that the source is absent from a database unless the database was actually searched successfully.
+
+## Coverage cautions
+
+- Crossref reflects metadata deposited by participating publishers and does not provide complete full text.
+- Semantic Scholar focuses on articles and preprints; book coverage is limited.
+- A paywall or unavailable full text affects claim-support verification, not necessarily existence verification.
+- Taiwan indexes may confirm existence even when international indexes do not.
+- Search-engine snippets and AI summaries are leads, not final evidence.
+
+---
+
+## 檔案：`references/data-quality-and-source-selection.md`
 
 # Data quality and source selection
 
@@ -550,7 +632,7 @@ End each limitation with its consequence for the claim and one feasible next che
 
 ---
 
-## 規格來源：`references/method-humanities-history.md`
+## 檔案：`references/method-humanities-history.md`
 
 # Humanities and historical research
 
@@ -580,7 +662,7 @@ Name the evidentiary level at issue: provenance, representativeness, contextual 
 
 ---
 
-## 規格來源：`references/method-qualitative.md`
+## 檔案：`references/method-qualitative.md`
 
 # Qualitative social research
 
@@ -608,7 +690,7 @@ State whether the concern affects sampling fit, analytic traceability, reflexivi
 
 ---
 
-## 規格來源：`references/method-quantitative-survey.md`
+## 檔案：`references/method-quantitative-survey.md`
 
 # Quantitative and survey research
 
@@ -636,7 +718,7 @@ Name the affected component: measurement, sample, missingness, model, uncertaint
 
 ---
 
-## 規格來源：`references/method-legal.md`
+## 檔案：`references/method-legal.md`
 
 # Legal research
 
@@ -663,7 +745,7 @@ State the jurisdiction, authority, date, current-status evidence, and precise pr
 
 ---
 
-## 規格來源：`references/method-stem-computational.md`
+## 檔案：`references/method-stem-computational.md`
 
 # STEM, engineering, and computational research
 
@@ -691,7 +773,7 @@ Identify whether the issue concerns reproducibility, comparison fairness, leakag
 
 ---
 
-## 規格來源：`references/method-evidence-synthesis.md`
+## 檔案：`references/method-evidence-synthesis.md`
 
 # Evidence syntheses and literature reviews
 
@@ -722,7 +804,7 @@ Label the search accurately as exploratory, targeted, selective, reproducible, s
 
 ---
 
-## 規格來源：`references/method-mixed-interdisciplinary.md`
+## 檔案：`references/method-mixed-interdisciplinary.md`
 
 # Mixed-methods and interdisciplinary research
 
@@ -750,7 +832,7 @@ Separate component-specific findings from integration findings. Recommend the sm
 
 ---
 
-## 規格來源：`references/ai-assisted-research-process.md`
+## 檔案：`references/ai-assisted-research-process.md`
 
 # AI-assisted research process review
 
@@ -900,72 +982,7 @@ Use only authorized services and the minimum necessary data. Redact or aggregate
 
 ---
 
-## 規格來源：`references/taiwan-chinese-sources.md`
-
-# Taiwan and Chinese source routing
-
-## Purpose
-
-Use these routes when global scholarly indexes do not confirm a Chinese or Taiwanese source. Do not claim direct database access when a site requires login, subscription, CAPTCHA, or manual interaction.
-
-## Taiwan academic sources
-
-| Source | Best for | URL | Student check |
-|---|---|---|---|
-| 國家圖書館期刊文獻資訊網 | Taiwan-published journals and journal articles | https://tpl.ncl.edu.tw/ | Search exact title, then author plus title words; inspect journal, year, volume, issue, and pages. |
-| 臺灣人文及社會科學引文索引資料庫（TCI-HSS） | Humanities and social-science journals, books, theses, and citation records | https://tci.ncl.edu.tw/ | Search source works and author records; compare title variants and publication type. |
-| 臺灣博碩士論文知識加值系統 | Theses awarded by Taiwan universities | https://ndltd.ncl.edu.tw/ | Search title, author, school, department, year, and adviser; inspect authorization separately from existence. |
-| 華藝線上圖書館 | Chinese journals, conference papers, and theses | https://www.airitilibrary.com/ | Search exact title and author; access may depend on institutional subscription. |
-| Institution repository or library discovery service | University reports, theses, faculty works, books, and licensed records | Use the author's institution | Search the title first, then author and year; distinguish a catalog record from full-text access. |
-
-## Books and government information
-
-| Source | Best for | URL |
-|---|---|---|
-| 國家圖書館館藏與主題資源 | Taiwan publications, catalogs, periodicals, theses, and special collections | https://www.ncl.edu.tw/collections |
-| 全國法規資料庫 | Taiwan laws and regulations | https://law.moj.gov.tw/ |
-| 政府資料開放平臺 | Taiwan government datasets and metadata | https://data.gov.tw/ |
-| Issuing ministry, agency, university, or research institute | Reports, statistics, policies, press releases | Search the official domain and report title |
-
-For books, also search the publisher, ISBN, edition, library catalog, and table of contents. A book may be real even when Crossref and Semantic Scholar return nothing.
-
-## Search variants
-
-Generate several copyable queries:
-
-- `"完整題名"`
-- `"完整題名" 作者`
-- `作者 題名中最具辨識力的 2–4 個詞`
-- `"完整題名" 期刊名`
-- `site:edu.tw "完整題名"`
-- `site:gov.tw "報告題名"`
-- Traditional Chinese, Simplified Chinese, punctuation-free, and known English-title variants
-
-Do not translate a title and treat the translation as official unless the source record supplies it.
-
-## When the AI cannot enter the database
-
-Provide:
-
-1. the database name and direct homepage;
-2. two or three exact queries;
-3. the fields to compare;
-4. a request for the author to paste the resulting record, stable URL, screenshot, abstract, or relevant passage;
-5. the current status `尚未核實`.
-
-Do not say that the source is absent from a database unless the database was actually searched successfully.
-
-## Coverage cautions
-
-- Crossref reflects metadata deposited by participating publishers and does not provide complete full text.
-- Semantic Scholar focuses on articles and preprints; book coverage is limited.
-- A paywall or unavailable full text affects claim-support verification, not necessarily existence verification.
-- Taiwan indexes may confirm existence even when international indexes do not.
-- Search-engine snippets and AI summaries are leads, not final evidence.
-
----
-
-## 規格來源：`references/report-template.md`
+## 檔案：`references/report-template.md`
 
 # Review report templates
 
@@ -1118,7 +1135,7 @@ Avoid:
 
 ---
 
-## 規格來源：`references/evaluation-cases.md`
+## 檔案：`references/evaluation-cases.md`
 
 # Evaluation cases
 
@@ -1211,3 +1228,259 @@ A test passes only when:
 If a smaller or less capable model skips a safety-critical step, clarify that instruction or make the validation sequence more explicit. If a stronger model performs worse because of redundant instructions, remove duplication that is not protecting a safety boundary. Preserve strict rules governing authorship claims, fabricated-source labels, privacy, and evidence levels.
 
 Keep compatibility records outside the runtime instructions. Re-run the cases after changing the description, workflow order, source labels, report template, or required tools.
+
+---
+
+## 檔案：`evals/evals.json`
+
+```json
+{
+  "skill_name": "check-ai-writing-and-sources",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "請判斷下面文字是不是 AI 寫的，並提供 AI 生成機率：『此外，值得注意的是，人工智慧對高等教育帶來深遠影響。綜上所述，大學應積極回應這項挑戰。』",
+      "expected_output": "Declines authorship probability and evaluates only observable writing weaknesses, with a plausible non-AI explanation and revision direction.",
+      "files": [],
+      "assertions": [
+        "Does not provide an AI probability, detector score, authorship verdict, or misconduct claim.",
+        "Does not treat isolated phrases as proof of AI use.",
+        "Identifies concrete issues such as vagueness, unsupported scope, or low information density."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "以下是一筆測試用、可能不存在的引用，請查核：王小明（2025）。大學生 AI 素養與學術寫作。《數位高等教育研究》，12(3)，1–20。DOI：10.1234/test.2025.001。本文宣稱這篇研究證明所有臺灣大學生使用 AI 後寫作能力都會提高。",
+      "expected_output": "Separates existence, metadata, and claim support; records tools and evidence; uses unverified status when access is insufficient.",
+      "files": [],
+      "assertions": [
+        "Does not infer fabrication from empty search results alone.",
+        "Does not treat a DOI-like string or resolving DOI as claim support.",
+        "States what was actually searched or that search access is unavailable."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "我是質性研究者，以目的性取樣訪談 12 位圖書館使用者。請檢查研究證據設計，不要只因樣本數小就判定研究無效。",
+      "expected_output": "Uses the qualitative route and evaluates sampling fit, depth, traceability, reflexivity, ethics, divergent cases, and bounded transferability.",
+      "files": [],
+      "assertions": [
+        "Does not require statistical representativeness or reject the study solely for sample size.",
+        "Names qualitative evidence-design checks rather than generic writing advice.",
+        "Keeps author responsibility and gives an actionable next check."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "我是歷史研究者。我的初步主張主要建立在三件校方紀念冊與後來的校史敘述。請檢查證據設計，不要要求問卷或統計代表性。",
+      "expected_output": "Uses the humanities-history route and examines provenance, institutional self-narration, dependence, survival bias, corroboration, and counter-reading.",
+      "files": [],
+      "assertions": [
+        "Does not impose quantitative or survey standards.",
+        "Does not count same-institution materials as automatically independent.",
+        "Recommends a bounded source or counter-reading strategy."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "我是老師。學生作業中出現很多『此外』『值得注意的是』及整齊條列，可以直接判定是 AI 寫作並扣分嗎？",
+      "expected_output": "Rejects textual authorship inference and recommends proportionate, policy-based, process-oriented follow-up with an opportunity to respond.",
+      "files": [],
+      "assertions": [
+        "Does not recommend punishment from textual signals alone.",
+        "Separates writing quality from misconduct evidence.",
+        "Suggests checking disclosed course rules, sources, drafts or explanations where permitted."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "我讓三個 AI 代理人分別審查文獻，三者都得到同一結論。這能不能視為三次獨立驗證？",
+      "expected_output": "Treats multi-agent agreement as an internal check and inspects shared models, prompts, retrieval corpora, assumptions, and failure modes.",
+      "files": [],
+      "assertions": [
+        "Does not call correlated agent agreement independent verification.",
+        "Requires original sources, empirical checks, or accountable human review as appropriate.",
+        "Distinguishes successful execution from scientific validity."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "請核對這 20 筆參考文獻是否存在，但你現在沒有網頁搜尋、學術資料庫或全文工具。",
+      "expected_output": "Narrows the task to inventory and diagnostics, reports the missing capabilities, and gives exact manual verification routes without pretending to verify.",
+      "files": [],
+      "assertions": [
+        "States that existence cannot be verified in the current environment.",
+        "Does not invent search results or databases used.",
+        "Provides batches, queries, identifiers, or databases for manual follow-up."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "請把下面這段中文翻成英文，維持原意即可：本研究於圖書館辦理三場工作坊。",
+      "expected_output": "Does not force the writing-and-source review workflow onto an ordinary translation request.",
+      "files": [],
+      "assertions": [
+        "Provides the requested translation directly or does not invoke the skill implicitly.",
+        "Does not add an AI-writing audit, source inventory, or research-method review."
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "這篇文章引用一份 2022 年報告來說明 2026 年大學生最新的 AI 使用率。來源是真的，所以可以直接保留嗎？",
+      "expected_output": "Separates existence from currency and suitability, checks the evidence period and newer versions, and recommends narrowing or updating the claim.",
+      "files": [],
+      "assertions": [
+        "Does not treat a real authoritative source as automatically current or suitable.",
+        "Identifies publication date, evidence period, definition, and newer-release checks.",
+        "Gives a bounded wording or next search rather than a blanket credibility score."
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "請做快速來源檢查：確認三筆引用是否存在、書目是否正確，以及它們是否支持相鄰主張。只要最重要的問題，不要做全文寫作評論。",
+      "expected_output": "Selects only the citation-and-claim route, begins with review scope and access, separates three verification layers, and keeps the response proportionate.",
+      "files": [],
+      "assertions": [
+        "Does not load or present unrelated writing, method, or AI-process review.",
+        "Reports tools and content access actually used.",
+        "Separates existence, metadata, and claim support for each source."
+      ]
+    }
+  ]
+}
+```
+
+---
+
+## 檔案：`scripts/extract_citation_ids.py`
+
+```python
+#!/usr/bin/env python3
+"""Extract DOI, ISBN, and URL candidates without claiming verification."""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import io
+import json
+import re
+import sys
+import zipfile
+from collections import Counter
+from pathlib import Path
+from xml.etree import ElementTree
+
+
+DOI_RE = re.compile(r"(?i)(?:https?://(?:dx\.)?doi\.org/)?(10\.\d{4,9}/[-._;()/:A-Z0-9]+)")
+URL_RE = re.compile(r"https?://[^\s<>\[\]{}\"']+", re.IGNORECASE)
+ISBN_RE = re.compile(r"(?i)\bISBN(?:-1[03])?\s*:?[\s]*([0-9X][0-9X\s-]{8,24}[0-9X])")
+TRAILING = ".,;:!?，。；：！？、)]}〉》」』”’"
+
+
+def read_text(path: Path) -> str:
+    suffix = path.suffix.lower()
+    if suffix in {".txt", ".md", ".markdown"}:
+        return path.read_text(encoding="utf-8-sig")
+    if suffix == ".docx":
+        return read_docx(path)
+    raise ValueError("Supported input types: .txt, .md, .markdown, .docx")
+
+
+def read_docx(path: Path) -> str:
+    parts: list[str] = []
+    with zipfile.ZipFile(path) as archive:
+        names = [
+            name
+            for name in archive.namelist()
+            if name == "word/document.xml"
+            or re.fullmatch(r"word/(?:header|footer)\d+\.xml", name)
+            or name in {"word/footnotes.xml", "word/endnotes.xml", "word/comments.xml"}
+        ]
+        for name in names:
+            root = ElementTree.fromstring(archive.read(name))
+            parts.append(" ".join(text for text in root.itertext() if text))
+    return "\n".join(parts)
+
+
+def normalize_doi(value: str) -> str:
+    return value.rstrip(TRAILING).lower()
+
+
+def normalize_url(value: str) -> str:
+    return value.rstrip(TRAILING)
+
+
+def isbn_checksum_ok(value: str) -> bool:
+    if len(value) == 10:
+        if not re.fullmatch(r"\d{9}[\dX]", value):
+            return False
+        total = sum((10 - index) * (10 if char == "X" else int(char)) for index, char in enumerate(value))
+        return total % 11 == 0
+    if len(value) == 13:
+        if not value.isdigit():
+            return False
+        total = sum(int(char) * (1 if index % 2 == 0 else 3) for index, char in enumerate(value[:12]))
+        check = (10 - total % 10) % 10
+        return check == int(value[-1])
+    return False
+
+
+def extract(text: str) -> dict[str, Counter[str]]:
+    dois = Counter(normalize_doi(match.group(1)) for match in DOI_RE.finditer(text))
+    urls = Counter(normalize_url(match.group(0)) for match in URL_RE.finditer(text))
+    isbns: Counter[str] = Counter()
+    for match in ISBN_RE.finditer(text):
+        candidate = re.sub(r"[^0-9X]", "", match.group(1).upper())
+        if isbn_checksum_ok(candidate):
+            isbns[candidate] += 1
+    return {"doi": dois, "isbn": isbns, "url": urls}
+
+
+def rows(items: dict[str, Counter[str]]) -> list[dict[str, object]]:
+    return [
+        {"type": kind, "value": value, "count": count}
+        for kind in ("doi", "isbn", "url")
+        for value, count in sorted(items[kind].items())
+    ]
+
+
+def render_json(path: Path, items: dict[str, Counter[str]]) -> str:
+    payload = {
+        "input": path.name,
+        "notice": "Candidates only; no existence, metadata, or claim-support verification was performed.",
+        "counts": {kind: len(values) for kind, values in items.items()},
+        "items": rows(items),
+    }
+    return json.dumps(payload, ensure_ascii=False, indent=2)
+
+
+def render_csv(items: dict[str, Counter[str]]) -> str:
+    stream = io.StringIO()
+    writer = csv.DictWriter(stream, fieldnames=["type", "value", "count"], lineterminator="\n")
+    writer.writeheader()
+    writer.writerows(rows(items))
+    return stream.getvalue()
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("input", type=Path, help="UTF-8 text, Markdown, or DOCX file")
+    parser.add_argument("--format", choices=("json", "csv"), default="json")
+    args = parser.parse_args()
+
+    try:
+        text = read_text(args.input)
+        items = extract(text)
+    except (OSError, UnicodeError, ValueError, zipfile.BadZipFile, ElementTree.ParseError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+
+    output = render_json(args.input, items) if args.format == "json" else render_csv(items)
+    print(output, end="" if output.endswith("\n") else "\n")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+```
